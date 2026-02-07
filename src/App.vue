@@ -161,8 +161,20 @@ onUnmounted(() => {
 }
 
 @media (max-width: 520px) {
+  .page {
+    padding: 24px 12px;
+  }
+
   .card {
-    padding: 28px 24px;
+    width: 100%;
+    max-width: 100%;
+    padding: 26px 20px 24px;
+  }
+
+  .card.fullscreen {
+    width: 100%;
+    max-width: 100%;
+    min-height: 320px;
   }
 }
 </style>

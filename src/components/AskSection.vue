@@ -38,7 +38,7 @@ defineProps({
         :style="{ left: `${noPos.x}px`, top: `${noPos.y}px` }"
         @mouseenter="onMoveNo"
         @pointerenter="onMoveNo"
-        @touchstart.prevent="onMoveNo"
+        @touchstart.prevent="onNo"
         @click="onNo"
       >
         Non
@@ -107,7 +107,7 @@ defineProps({
 
 @media (max-width: 520px) {
   .button-stage {
-    height: 190px;
+    height: 220px;
   }
 
   .btn {
