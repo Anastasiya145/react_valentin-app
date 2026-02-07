@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Playfair+Display:wght@600;700&display=swap");
+
+:root {
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --color-text: #2a2233;
+  --color-text-muted: #5b475b;
+  --color-text-muted-strong: #5c3d52;
+  --color-note: #7b5a6e;
+  --color-page-bg: #f7dbe7;
+  --color-page-grad-1: #ffd6e6;
+  --color-page-grad-2: #ffe8f2;
+  --color-page-grad-3: #fce6ec;
+  --color-page-grad-4: #f6d0dc;
+  --color-page-grad-5: #f3bcd0;
+  --color-card-bg: rgba(255, 255, 255, 0.88);
+  --color-card-border: rgba(255, 255, 255, 0.6);
+  --color-card-shadow: rgba(194, 72, 122, 0.2);
+  --color-glow: rgba(255, 180, 210, 0.75);
+  --color-heart: rgba(216, 27, 96, 0.55);
+  --color-heart-shadow: rgba(216, 27, 96, 0.2);
+  --color-badge-bg: #ffb3c9;
+  --color-badge-text: #7d1e46;
+  --color-button-yes-1: #f06292;
+  --color-button-yes-2: #d81b60;
+  --color-button-yes-shadow: rgba(216, 27, 96, 0.3);
+  --color-button-no-border: #f4b3c8;
+  --color-button-no-text: #a43f63;
+  --color-button-no-shadow: rgba(164, 63, 99, 0.15);
+  --color-stage-bg-1: #fff1f6;
+  --color-stage-bg-2: #ffe4ef;
+  --color-stage-border: rgba(208, 110, 153, 0.35);
+  --color-photo-border: #ffd1e1;
+  --color-photo-shadow: rgba(177, 71, 109, 0.2);
+  --color-signature: #b23e68;
+  --color-no-sad-1: #4d6bff;
+  --color-no-sad-2: #5f4bd8;
+  --color-no-sad-shadow: rgba(40, 60, 180, 0.35);
+  --color-no-tease-1: #f3b54a;
+  --color-no-tease-2: #f08a5d;
+  --color-no-tease-shadow: rgba(188, 94, 35, 0.35);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-page-bg);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+@keyframes pop-in {
+  from {
+    transform: translateY(18px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+  }
+  100% {
+    transform: translateY(110vh) rotate(35deg);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(24px, 12px);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
