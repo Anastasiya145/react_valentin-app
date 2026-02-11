@@ -1,17 +1,7 @@
 <script setup>
+import { nextTick, onMounted, onUnmounted, reactive, ref } from "vue";
+
 defineProps({
-  stageRef: {
-    type: Object,
-    required: true,
-  },
-  noBtnRef: {
-    type: Object,
-    required: true,
-  },
-  noPos: {
-    type: Object,
-    required: true,
-  },
   onYes: {
     type: Function,
     required: true,
@@ -20,31 +10,78 @@ defineProps({
     type: Function,
     required: true,
   },
-  onMoveNo: {
-    type: Function,
-    required: true,
-  },
+});
+
+const stageRef = ref(null);
+const noBtnRef = ref(null);
+const noPos = reactive({ x: 0, y: 0 });
+const noDodgeCount = ref(0);
+const noUnlocked = ref(false);
+
+const moveNoButton = (countAttempt = true) => {
+  const stage = stageRef.value;
+  const noBtn = noBtnRef.value;
+  if (!stage || !noBtn) return;
+
+  if (noUnlocked.value) return;
+
+  if (countAttempt) {
+    noDodgeCount.value += 1;
+    if (noDodgeCount.value >= 6) {
+      noUnlocked.value = true;
+      return;
+    }
+  }
+
+  const stageRect = stage.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const padding = 12;
+
+  const maxX = Math.max(padding, stageRect.width - btnRect.width - padding);
+  const maxY = Math.max(padding, stageRect.height - btnRect.height - padding);
+
+  noPos.x = Math.floor(Math.random() * maxX);
+  noPos.y = Math.floor(Math.random() * maxY);
+};
+
+const handleResize = () => moveNoButton(false);
+
+const handleTouchStart = (event) => {
+  if (noUnlocked.value) return;
+  event.preventDefault();
+  moveNoButton();
+};
+
+onMounted(async () => {
+  await nextTick();
+  moveNoButton(false);
+  window.addEventListener("resize", handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
 });
 </script>
 
 <template>
   <section class="content">
-    <div :ref="stageRef" class="button-stage">
+    <p class="note">Attrape le bouton « Non » si tu peux 😏</p>
+    <div ref="stageRef" class="button-stage">
       <button class="btn yes" type="button" @click="onYes">Oui, je veux ❤️</button>
       <button
-        :ref="noBtnRef"
+        ref="noBtnRef"
         class="btn no"
         type="button"
         :style="{ left: `${noPos.x}px`, top: `${noPos.y}px` }"
-        @mouseenter="onMoveNo"
-        @pointerenter="onMoveNo"
-        @touchstart.prevent="onNo"
+        @mouseenter="moveNoButton(false)"
+        @pointerenter="moveNoButton(false)"
+        @pointerdown="moveNoButton"
+        @touchstart="handleTouchStart"
         @click="onNo"
       >
         Non
       </button>
     </div>
-    <p class="note">Attrape le bouton « Non » si tu peux 😏</p>
   </section>
 </template>
 

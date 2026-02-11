@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import photoUrl from "./my-photo.jpg";
 import HeartsLayer from "./components/HeartsLayer.vue";
 import GlowOrb from "./components/GlowOrb.vue";
@@ -9,9 +9,6 @@ import AcceptedSection from "./components/AcceptedSection.vue";
 import NoScreen from "./components/NoScreen.vue";
 
 const view = ref("ask");
-const stageRef = ref(null);
-const noBtnRef = ref(null);
-const noPos = reactive({ x: 0, y: 0 });
 const timers = [];
 
 const showHero = computed(() => view.value === "ask" || view.value === "yes");
@@ -24,22 +21,6 @@ const hearts = Array.from({ length: 16 }, () => ({
   opacity: (Math.random() * 0.5 + 0.35).toFixed(2),
 }));
 
-const moveNoButton = () => {
-  const stage = stageRef.value;
-  const noBtn = noBtnRef.value;
-  if (!stage || !noBtn) return;
-
-  const stageRect = stage.getBoundingClientRect();
-  const btnRect = noBtn.getBoundingClientRect();
-  const padding = 12;
-
-  const maxX = Math.max(padding, stageRect.width - btnRect.width - padding);
-  const maxY = Math.max(padding, stageRect.height - btnRect.height - padding);
-
-  noPos.x = Math.floor(Math.random() * maxX);
-  noPos.y = Math.floor(Math.random() * maxY);
-};
-
 const clearTimers = () => {
   timers.splice(0).forEach((id) => clearTimeout(id));
 };
@@ -47,7 +28,6 @@ const clearTimers = () => {
 const goToAsk = async () => {
   view.value = "ask";
   await nextTick();
-  moveNoButton();
 };
 
 const handleNoClick = () => {
@@ -73,12 +53,9 @@ const handleYesClick = () => {
 
 onMounted(async () => {
   await nextTick();
-  moveNoButton();
-  window.addEventListener("resize", moveNoButton);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("resize", moveNoButton);
   clearTimers();
 });
 </script>
@@ -90,15 +67,7 @@ onUnmounted(() => {
     <main class="card" :class="{ fullscreen: view === 'no1' || view === 'no2' }">
       <ValentineHero v-if="showHero" />
 
-      <AskSection
-        v-if="view === 'ask'"
-        :stage-ref="stageRef"
-        :no-btn-ref="noBtnRef"
-        :no-pos="noPos"
-        :on-yes="handleYesClick"
-        :on-no="handleNoClick"
-        :on-move-no="moveNoButton"
-      />
+      <AskSection v-if="view === 'ask'" :on-yes="handleYesClick" :on-no="handleNoClick" />
 
       <AcceptedSection v-else-if="view === 'yes'" :photo-url="photoUrl" />
 
@@ -125,6 +94,7 @@ onUnmounted(() => {
 <style scoped>
 .page {
   min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   place-items: center;
   background:
@@ -138,7 +108,8 @@ onUnmounted(() => {
     );
   position: relative;
   overflow: hidden;
-  padding: 32px 16px;
+  padding: calc(32px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right))
+    calc(32px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
 }
 
 .card {
@@ -146,6 +117,7 @@ onUnmounted(() => {
   background: var(--color-card-bg);
   border-radius: 32px;
   padding: 36px 32px 32px;
+  box-sizing: border-box;
   box-shadow: 0 18px 45px var(--color-card-shadow);
   backdrop-filter: blur(12px);
   position: relative;
@@ -162,12 +134,14 @@ onUnmounted(() => {
 
 @media (max-width: 520px) {
   .page {
-    padding: 24px 12px;
+    padding: calc(24px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right))
+      calc(24px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));
   }
 
   .card {
-    width: 100%;
+    width: calc(100% - 24px);
     max-width: 100%;
+    margin: 0 auto;
     padding: 26px 20px 24px;
   }
 
